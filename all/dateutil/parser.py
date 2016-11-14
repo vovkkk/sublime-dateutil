@@ -56,6 +56,10 @@ class _timelex(object):
         if isinstance(instream, text_type):
             instream = StringIO(instream)
 
+        if getattr(instream, 'read', None) is None:
+            raise TypeError('Parser must be a string or character stream, not '
+                            '{itype}'.format(itype=instream.__class__.__name__))
+
         self.instream = instream
         self.charstack = []
         self.tokenstack = []
@@ -948,7 +952,7 @@ class parser(object):
                             raise ValueError('No hour specified with ' +
                                              'AM or PM flag.')
                     elif not 0 <= res.hour <= 12:
-                        # If AM/PM is found, it's a 12 hour clock, so raise
+                        # If AM/PM is found, it's a 12 hour clock, so raise 
                         # an error for invalid range
                         if fuzzy:
                             val_is_ampm = False
